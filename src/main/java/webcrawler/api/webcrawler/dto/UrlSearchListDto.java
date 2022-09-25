@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UrlListDto {
+public class UrlSearchListDto {
     private String []urlList;
-    private String searchKeyword;
+    private String searchText;
 }

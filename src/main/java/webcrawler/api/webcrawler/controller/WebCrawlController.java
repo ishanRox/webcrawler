@@ -7,8 +7,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import webcrawler.api.webcrawler.dto.UrlListDto;
+import webcrawler.api.webcrawler.dto.SearchResult;
+import webcrawler.api.webcrawler.dto.UrlSearchListDto;
 import webcrawler.api.webcrawler.service.WebCrawlerService;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/search")
@@ -19,21 +24,18 @@ public class WebCrawlController {
 
 
     @PostMapping
-    public ResponseEntity add( @RequestBody UrlListDto urlListDto ) {
+    public ResponseEntity add( @RequestBody UrlSearchListDto urlSearchListDto ) {
         try {
-            webCrawlerService.validateUrlList(urlListDto.getUrlList());
-            for (String url : urlListDto.getUrlList()) {
-                System.out.println(url);
-                String text = webCrawlerService.getUrlBodyText(url, urlListDto.getSearchKeyword());
-                System.out.println(text+"hiiiii");
-            }
-
-            return new ResponseEntity<>("okkk", HttpStatus.OK);
+            webCrawlerService.validateUrlList(urlSearchListDto.getUrlList());
+            List<SearchResult> searchResults = webCrawlerService.getSearchResultList(urlSearchListDto);
+            return new ResponseEntity<List<SearchResult>>(searchResults, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
         }
 
 
     }
+
+
 
 }

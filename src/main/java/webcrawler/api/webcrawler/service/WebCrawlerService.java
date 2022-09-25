@@ -4,8 +4,12 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Service;
+import webcrawler.api.webcrawler.dto.SearchResult;
+import webcrawler.api.webcrawler.dto.UrlSearchListDto;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,9 +45,21 @@ public class WebCrawlerService {
               return "not found";
           }
       }catch (Exception e){
-          System.out.println(e.getMessage());
+        throw  e;
       }
+    }
 
-        return "";
+    public List<SearchResult> getSearchResultList( UrlSearchListDto urlSearchListDto ) throws IOException {
+        List<SearchResult> searchResults = new ArrayList<>();
+        for (String url : urlSearchListDto.getUrlList()) {
+            System.out.println(url);
+            String text = getUrlBodyText(url, urlSearchListDto.getSearchText());
+            SearchResult searchResult = new SearchResult();
+            searchResult.setUrl(url);
+            searchResult.setFoundedNode(text);
+            searchResult.setFound(text!="not found");
+            searchResults.add(searchResult);
+        }
+        return searchResults;
     }
 }
