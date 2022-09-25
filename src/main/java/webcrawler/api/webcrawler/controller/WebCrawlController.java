@@ -1,5 +1,7 @@
 package webcrawler.api.webcrawler.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,10 +24,12 @@ public class WebCrawlController {
     @Autowired
     private WebCrawlerService webCrawlerService;
 
+    Logger logger = LoggerFactory.getLogger(WebCrawlController.class);
 
     @PostMapping
     public ResponseEntity add( @RequestBody UrlSearchListDto urlSearchListDto ) {
         try {
+            logger.info(urlSearchListDto.getSearchText(),urlSearchListDto.getUrlList());
             webCrawlerService.validateUrlList(urlSearchListDto.getUrlList());
             List<SearchResult> searchResults = webCrawlerService.getSearchResultList(urlSearchListDto);
             return new ResponseEntity<List<SearchResult>>(searchResults, HttpStatus.OK);

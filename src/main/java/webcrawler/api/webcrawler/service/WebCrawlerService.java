@@ -3,6 +3,8 @@ package webcrawler.api.webcrawler.service;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import webcrawler.api.webcrawler.dto.SearchResult;
 import webcrawler.api.webcrawler.dto.UrlSearchListDto;
@@ -16,12 +18,14 @@ import java.util.regex.Pattern;
 @Service
 public class WebCrawlerService {
 
-    private static boolean isValidUrl( String urlString ) {
+    Logger logger = LoggerFactory.getLogger(WebCrawlerService.class);
+    private  boolean isValidUrl( String urlString ) {
         String urlRegex = "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
 
         Pattern patt = Pattern.compile(urlRegex);
         Matcher matcher = patt.matcher(urlString);
         boolean matches = matcher.matches();
+        logger.info(urlString+" isUrl :"+matches);
         return matches;
     }
 
@@ -45,6 +49,7 @@ public class WebCrawlerService {
               return "not found";
           }
       }catch (Exception e){
+          logger.info(e.getMessage());
         throw  e;
       }
     }
@@ -52,7 +57,7 @@ public class WebCrawlerService {
     public List<SearchResult> getSearchResultList( UrlSearchListDto urlSearchListDto ) throws IOException {
         List<SearchResult> searchResults = new ArrayList<>();
         for (String url : urlSearchListDto.getUrlList()) {
-            System.out.println(url);
+            logger.info(url);
             String text = getUrlBodyText(url, urlSearchListDto.getSearchText());
             SearchResult searchResult = new SearchResult();
             searchResult.setUrl(url);
