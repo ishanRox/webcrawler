@@ -22,6 +22,12 @@ public class WebCrawlController {
     public ResponseEntity add( @RequestBody UrlListDto urlListDto ) {
         try {
             webCrawlerService.validateUrlList(urlListDto.getUrlList());
+            for (String url : urlListDto.getUrlList()) {
+                System.out.println(url);
+                String text = webCrawlerService.getUrlBodyText(url, urlListDto.getSearchKeyword());
+                System.out.println(text+"hiiiii");
+            }
+
             return new ResponseEntity<>("okkk", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);

@@ -1,9 +1,10 @@
 package webcrawler.api.webcrawler.service;
 
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.Document;
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,12 +31,19 @@ public class WebCrawlerService {
 
     }
 
-    public String getUrlBodyText() throws IOException {
-        Document doc = (Document) Jsoup.connect("http://jsoup.org").get();
+    public String getUrlBodyText(String url,String keyword) throws IOException {
+      try {
+          Document doc = (Document) Jsoup.connect(url).get();
+          Element element = doc.select(":containsOwn("+keyword+")").first();
+          if(element!=null && element.hasText() && element.text()!=""){
+              return "text found : "+element;
+          }else {
+              return "not found";
+          }
+      }catch (Exception e){
+          System.out.println(e.getMessage());
+      }
 
-//        Element link = doc.select("a").first();
-//        String relHref = link.attr("href"); // == "/"
-//        String absHref = link.attr("abs:href"); // "http://jsoup.org/"
         return "";
     }
 }
