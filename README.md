@@ -34,9 +34,12 @@ webcrawler api to search text
 	
 	5.will get this error if invalid urls have entered - www..abc.com :URL is wronge
 	{
-  "searchText": "string",
-  "urlList": [
-    "www..abc.com"
-  ]
-}
+		"searchText": "python",
+		"urlList": [
+			"www..abc.com"
+		]
+	}
+
+
+
 
